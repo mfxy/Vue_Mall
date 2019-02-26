@@ -8,4 +8,4 @@ var productSchema = new Schema ({
     "productImage": String
 })
 
-module.exports = mongoose.model('Product', productSchema)
+module.exports = mongoose.model('Product', productSchema, 'products')

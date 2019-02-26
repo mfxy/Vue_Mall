@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
                 msg: 'success',
                 content: {
                     count: doc.length,
-                    data: doc
+                    dataList: doc
                 }
             })
         }

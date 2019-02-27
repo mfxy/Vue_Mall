@@ -15,7 +15,28 @@ mongoose.connect('mongodb://127.0.0.1:27017/vmall', {useNewUrlParser:true}, (err
 /* GET products listing. */
 router.get('/', function(req, res, next) {
 //   res.send('respond with products.');
-    Products.find({}, (err, doc) => {
+    // let page = parseInt(req.param('page')) // deprecated
+    let page = parseInt(req.query.page)
+    let pageSize = parseInt(req.query.pageSize)
+    let skip = pageSize*(page-1)
+    let sort = parseInt(req.query.sort)
+    let gte, lt
+    let find = {}
+    switch (req.query.range) {
+        case '0': gte = 0; lt=500; break;
+        case '1': gte = 500; lt=1000; break;
+        case '2': gte = 1000; lt=1500; break;
+    }
+    find = {
+        salePrice: {
+            $gte: gte,
+            $lt: lt
+        }
+    }
+
+    let productsList = Products.find(find).skip(skip).limit(pageSize).sort({salePrice:sort})
+    // Products.find({}, (err, doc) => {
+    productsList.exec((err, doc) => {
         if (err) {
             res.json({
                 code: '1',

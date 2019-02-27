@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Search @rangeChangeChild="rangeChangeParent"/>
     <ItemCard v-for="item in productsList" :key="item.productId"
     :name="item.productName" :price="item.salePrice" class="item-card"/>
   </div>
@@ -7,22 +8,31 @@
 
 <script>
 // @ is an alias to /src
-import ItemCard from '@/components/ItemCard.vue'
-import axios from 'axios'
+import Search from '@/components/Search';
+import ItemCard from '@/components/ItemCard'
 
 export default {
   name: 'home',
   components: {
+    Search,
     ItemCard
   },
   data() {
     return {
-      productsList: []
+      productsList: [],
+      params: {
+        page: 2,
+        pageSize: 5,
+        sort: -1
+      }
     }
   },
   methods: {
+    rangeChangeParent() {},
     query() {
-      axios.get("/products").then(response => {
+      this.axios.get("/products", {
+        params: this.params
+      }).then(response => {
         let res = response.data
         if (res.code == '0') {
           console.log(res.content.dataList)

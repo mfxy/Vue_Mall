@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Search @rangeChangeChild="rangeChangeParent"/>
+    <Search @rangeChangeChild="rangeChangeParent" @sortChangeChild="sortChangeParent"/>
     <ItemCard v-for="item in productsList" :key="item.productId"
               :name="item.productName" :price="item.salePrice"
               class="item-card"/>
@@ -22,15 +22,26 @@ export default {
     return {
       productsList: [],
       params: {
-        page: 1,
-        pageSize: 5,
-        sort: -1
+        page: 2,
+        pageSize: 4,
+        sort: 1
       }
     }
   },
   methods: {
     rangeChangeParent(data) {
-      this.params.range = data
+      if (data) {
+        this.params.range = data
+      } else {
+        delete this.params.range
+      }
+      this.params.page =  1
+      this.query()
+    },
+    sortChangeParent(data) {
+      console.log(data)
+      this.params.sort = data ? 1 : -1
+      this.params.page =  1
       this.query()
     },
     query() {

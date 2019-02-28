@@ -20,17 +20,20 @@ router.get('/', function(req, res, next) {
     let pageSize = parseInt(req.query.pageSize)
     let skip = pageSize*(page-1)
     let sort = parseInt(req.query.sort)
-    let gte, lt
+    let range = req.query.range
     let find = {}
-    switch (req.query.range) {
-        case '0': gte = 0; lt=500; break;
-        case '1': gte = 500; lt=1000; break;
-        case '2': gte = 1000; lt=1500; break;
-    }
-    find = {
-        salePrice: {
-            $gte: gte,
-            $lt: lt
+    if (range) {
+        let gte, lt
+        switch (range) {
+            case '0': gte = 0; lt=500; break;
+            case '1': gte = 500; lt=1000; break;
+            case '2': gte = 1000; lt=1500; break;
+        }
+        find = {
+            salePrice: {
+                $gte: gte,
+                $lt: lt
+            }
         }
     }
 

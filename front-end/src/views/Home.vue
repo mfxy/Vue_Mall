@@ -2,7 +2,8 @@
   <div>
     <Search @rangeChangeChild="rangeChangeParent"/>
     <ItemCard v-for="item in productsList" :key="item.productId"
-    :name="item.productName" :price="item.salePrice" class="item-card"/>
+              :name="item.productName" :price="item.salePrice"
+              class="item-card"/>
   </div>
 </template>
 
@@ -21,14 +22,17 @@ export default {
     return {
       productsList: [],
       params: {
-        page: 2,
+        page: 1,
         pageSize: 5,
         sort: -1
       }
     }
   },
   methods: {
-    rangeChangeParent() {},
+    rangeChangeParent(data) {
+      this.params.range = data
+      this.query()
+    },
     query() {
       this.axios.get("/products", {
         params: this.params

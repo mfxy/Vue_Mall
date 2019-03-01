@@ -44,8 +44,10 @@ export default {
 }
 </script>
 
-<style scoped>
-.search .el-button{
-  margin: 10px;
+<style lang="scss" scoped>
+.search {
+  .el-button{
+    margin: 10px;
+  }
 }
 </style>

@@ -3,7 +3,8 @@
     <Search @rangeChangeChild="rangeChangeParent" @sortChangeChild="sortChangeParent"/>
     <ItemCard v-for="item in productsList" :key="item.productId"
               :name="item.productName" :price="item.salePrice"
-              class="item-card"/>
+              :productId="item.productId" class="item-card"
+              @addChild="addParent"/>
   </div>
 </template>
 
@@ -43,6 +44,15 @@ export default {
       this.params.sort = data ? 1 : -1
       this.params.page =  1
       this.query()
+    },
+    addParent(data) {
+      console.log(data)
+      this.axios.post("/products/add", {
+        productId: data
+      }).then(response => {
+        let res = response.data
+        console.log(res)
+      })
     },
     query() {
       this.axios.get("/products", {

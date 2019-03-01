@@ -1,0 +1,31 @@
+{
+  "userId": "0001",
+  "ueserName": "Amy",
+  "userPwd": "111111",
+  "cartList": [],
+  "orderList": [
+    {
+      "createDate": "2019-03-01 11:01:02",
+      "orderId": "0000100001",
+      "orderTotal": 1212,
+      "orderStatus": 1,
+      "productsList": [
+        {
+          "productId" : "0001",
+          "productName" : "aaa",
+          "salePrice" : 111.0,
+          "productImage" : "1.png"
+        }
+      ]
+    }
+  ],
+  "addressList": [
+    {
+      "addressId": "0001001",
+      "addressName": "A City, B District, C Street, No. 111",
+      "userName": "Miss.A",
+      "mobile": "13123456789",
+      "isDefault": true
+    }
+  ]
+}

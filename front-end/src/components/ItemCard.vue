@@ -6,7 +6,7 @@
         <span>{{name}}</span>
         <div class="bottom clearfix">
           <span class="sub-title">{{`$${price}`}}</span>
-          <el-button type="primary" class="button">Add</el-button>
+          <el-button @click="add(productId)" type="primary" class="button">Add</el-button>
         </div>
       </div>
     </el-card>
@@ -17,8 +17,15 @@
 export default {
   name: 'ItemCard',
   props: {
+    productId: String,
     name: String,
     price: Number
+  },
+  methods: {
+    add(productId) {
+      console.log(productId)
+      this.$emit('addChild', productId)
+    }
   }
 }
 </script>

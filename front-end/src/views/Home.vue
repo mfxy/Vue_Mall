@@ -4,7 +4,7 @@
     <ItemCard v-for="item in productsList" :key="item.productId"
               :name="item.productName" :price="item.salePrice"
               :productId="item.productId" class="item-card"
-              @addChild="addParent"/>
+              @addItemChild="addItemParent"/>
   </div>
 </template>
 
@@ -45,9 +45,9 @@ export default {
       this.params.page =  1
       this.query()
     },
-    addParent(data) {
+    addItemParent(data) {
       console.log(data)
-      this.axios.post("/products/add", {
+      this.axios.post("/products/addItem", {
         productId: data
       }).then(response => {
         let res = response.data

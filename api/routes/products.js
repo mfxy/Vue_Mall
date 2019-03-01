@@ -59,8 +59,8 @@ router.get('/', (req, res, next) => {
   })
 });
 
-/* POST add */
-router.post('/add', (req, res, next) => {
+/* POST addItem */
+router.post('/addItem', (req, res, next) => {
   let userId = '0001'
   let productId = parseInt(req.body.productId)
   Users.findOne({userId}, (userErr, userDoc) => {

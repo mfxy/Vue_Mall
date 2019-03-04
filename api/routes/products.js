@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Products = require('../models/products');
 var Users = require('../models/users')
 
-// 连接数据库
+/* Connent to mongoDB */
 mongoose.connect('mongodb://127.0.0.1:27017/vmall', {useNewUrlParser:true}, (error, res) => {
   if (error) {
     console.log(`MongoDB connected error.${error}`)
@@ -125,12 +125,14 @@ router.post('/addItem', (req, res, next) => {
                 })
               } else { // 未找商品
                 // 在商品列表中点击，不会出现该情况
+                console.log('Product not exist!')
               }
             }
           })
         }
       } else { // 查找用户接口成功，但未找到用户
         // 有登录校验，不会出现该情况
+        console.log('User not exist!')
       }
     }
   })

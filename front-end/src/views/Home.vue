@@ -1,6 +1,8 @@
 <template>
   <div>
     <Search @rangeChangeChild="rangeChangeParent" @sortChangeChild="sortChangeParent"/>
+    <!-- <router-link to="/cartList">购物车</router-link> -->
+    <!-- <el-button type="text" @click="router.push('/cartList')">购物车</el-button> -->
     <ItemCard v-for="item in productsList" :key="item.productId"
               :name="item.productName" :price="item.salePrice"
               :productId="item.productId" class="item-card"

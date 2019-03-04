@@ -10,6 +10,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/cartList',
+      name: 'cartList',
+      component: () => import('./views/CartList.vue')
     }
     // {
     //   path: '/about',

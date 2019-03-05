@@ -12,7 +12,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/vmall', {useNewUrlParser: true}, (er
   }
 })
 
-/* GET users listing. */
+/* GET user cartList listing. */
 router.get('/cartList', (req, res, next) => {
   // res.send('respond with a resource');
   let userId = '0001'
@@ -25,12 +25,17 @@ router.get('/cartList', (req, res, next) => {
     } else {
       console.log('userDoc', userDoc)
       if (userDoc) { // 找到用户
+        let total = 0
+        userDoc.cartList.map(item => {
+          total += item.salePrice
+        })
         res.json({
           code: '0',
           msg: 'success',
           content: {
             count: userDoc.cartList.length,
-            dataList: userDoc.cartList
+            dataList: userDoc.cartList,
+            total
           }
         })
       } else { // 接口成功，但未找到用户
@@ -40,5 +45,25 @@ router.get('/cartList', (req, res, next) => {
     }
   })
 });
+
+/* POST delete */
+router.post('/cartList/delete', (req, res, next) => {
+  let userId = '0001'
+  let productId = req.body.productId
+  Users.update({userId}, {$pull: {cartList:{productId}}}, (delErr, delDoc) => {
+    if (delErr) {
+      res.json({
+        code: '1',
+        msg: delErr.message
+      })
+    } else {
+      res.json({
+        code: '0',
+        msg: 'success',
+        content: delDoc
+      })
+    }
+  })
+})
 
 module.exports = router;

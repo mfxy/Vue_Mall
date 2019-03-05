@@ -76,7 +76,9 @@ router.post('/addItem', (req, res, next) => {
         let hasItem = false
         userDoc.cartList.map(item => {
           if (item.productId === productId) {
+            let price = item.salePrice / item.productNum // 单价
             item.productNum ++
+            item.salePrice = price * item.productNum
             hasItem = true
           }
         })

@@ -1,6 +1,9 @@
 <template>
   <div>
-    <el-table :data="cartList">
+    <el-table ref="tableRef" :data="cartList"
+              @selection-change="selectionChange"
+              @select="select"
+              @select-all="selectAll">
       <el-table-column type="selection"></el-table-column>
       <el-table-column label="Name" prop="productName"></el-table-column>
       <el-table-column label="Quantity">
@@ -18,8 +21,8 @@
       </el-table-column>
       <el-table-column label="Price">
         <template slot-scope="scope">
-          {{`$${scope.row.salePrice}`}}
-          <!-- {{`$${scope.row.salePrice*scope.row.productNum}`}} -->
+          <!-- {{`$${scope.row.salePrice}`}} -->
+          {{`$${scope.row.salePrice*scope.row.productNum}`}}
         </template>
       </el-table-column>
       <el-table-column>
@@ -47,10 +50,36 @@ export default {
   data() {
     return {
       cartList: [],
-      total: null
+      total: 0
     }
   },
   methods: {
+    // 选择单行、全部都触发
+    selectionChange(selection) {
+      console.log('selection', selection)
+      this.total = 0
+      selection.map(item => {
+        this.total += item.salePrice*item.productNum
+      })
+    },
+    // 选择单行触发, 未选择的设为false
+    select(select, row) {
+      console.log('select', select, row)
+      row.checked = !row.checked
+    },
+    // 选择全部触发, 未选择的设为false
+    selectAll(selectAll) {
+      console.log('selectAll', selectAll)
+      if (selectAll.length == 0) {
+        selectAll.map(item => {
+          item.checked = false
+        })
+      } else {
+        selectAll.map(item => {
+          item.checked = true
+        })
+      }
+    },
     increase(productId) {
       console.log(productId)
     },
@@ -87,12 +116,17 @@ export default {
         this.query()
       })
     },
-    query() {
-      this.axios.get('users/cartList').then(response => {
+    async query() {
+      await this.axios.get('users/cartList').then(response => {
         console.log('cartList', response)
         let res = response.data
         this.cartList = res.content.dataList
-        this.total = res.content.total
+      })
+      this.cartList.map((item,index) => {
+        if (item.checked === true) {
+          console.log('true')
+          this.$refs.tableRef.toggleRowSelection(this.cartList[index])
+        }
       })
     }
   },

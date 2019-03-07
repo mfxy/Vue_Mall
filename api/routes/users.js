@@ -25,17 +25,18 @@ router.get('/cartList', (req, res, next) => {
     } else {
       console.log('userDoc', userDoc)
       if (userDoc) { // 找到用户
-        let total = 0
-        userDoc.cartList.map(item => {
-          total += item.salePrice
-        })
+        // let total = 0
+        // userDoc.cartList.map(item => {
+        //   // total += item.salePrice
+        //   total += item.salePrice*item.productNum
+        // })
         res.json({
           code: '0',
           msg: 'success',
           content: {
             count: userDoc.cartList.length,
             dataList: userDoc.cartList,
-            total
+            // total
           }
         })
       } else { // 接口成功，但未找到用户
@@ -61,6 +62,31 @@ router.post('/cartList/delete', (req, res, next) => {
         code: '0',
         msg: 'success',
         content: delDoc
+      })
+    }
+  })
+})
+
+/* POST edit */
+router.post('/cartList/edit', (req, res, next) => {
+  let userId = '0001'
+  let productId = req.body.productId
+  let productNum = req.body.productNum
+  let checked = req.body.checked
+  Users.update({userId, 'cartList.productId': productId}, {
+    'cartList.$.productNum': productNum,
+    'cartList.$.checked': checked,
+  }, (editErr, editDoc) => {
+    if (editErr) {
+      res.json({
+        code: '1',
+        msg: editErr.message
+      })
+    } else {
+      res.json({
+        code: '0',
+        msg: 'success',
+        content: editDoc
       })
     }
   })

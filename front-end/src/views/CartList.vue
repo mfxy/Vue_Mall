@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-table ref="tableRef" :data="cartList"
-              @selection-change="selectionChange"
               @select="select"
               @select-all="selectAll">
+              <!-- @selection-change="selectionChange" -->
       <el-table-column type="selection"></el-table-column>
       <el-table-column label="Name" prop="productName"></el-table-column>
       <el-table-column label="Quantity">
@@ -11,11 +11,11 @@
           <el-button type="default" plain size="mini"
                      style="margin-right:10px;"
                      :disabled="scope.row.productNum==1"
-                     @click="reduce(scope.row.productId)"
+                     @click="edit(scope.row, 'reduce')"
           >-</el-button>
           {{scope.row.productNum}}
           <el-button type="default" plain size="mini"
-                     @click="increase(scope.row.productId)"
+                     @click="edit(scope.row, 'increase')"
           >+</el-button>
         </template>
       </el-table-column>
@@ -49,42 +49,67 @@ export default {
   name: 'CartList',
   data() {
     return {
-      cartList: [],
-      total: 0
+      cartList: []
     }
   },
-  methods: {
-    // 选择单行、全部都触发
-    selectionChange(selection) {
-      console.log('selection', selection)
-      this.total = 0
-      selection.map(item => {
-        this.total += item.salePrice*item.productNum
+  computed: {
+    total() {
+      let total = 0
+      this.cartList.map(item => {
+        if (item.checked == true) {
+          total += item.salePrice*item.productNum
+        }
       })
-    },
-    // 选择单行触发, 未选择的设为false
+      return total
+    } // 前端计算total，编辑时只发送修改数据，不获取购物车列表
+  },
+  methods: {
+    // // 选择单行、全部时都触发，计算total
+    // selectionChange(selection) {
+    //   console.log('selection', selection)
+    //   this.total = 0
+    //   selection.map(item => {
+    //     this.total += item.salePrice*item.productNum
+    //   })
+    // },
+    // 选择单行时触发, 未选择的设为false
     select(select, row) {
       console.log('select', select, row)
       row.checked = !row.checked
+      this.edit(row)
     },
-    // 选择全部触发, 未选择的设为false
+    // 选择全部时触发, 未选择的设为false
     selectAll(selectAll) {
       console.log('selectAll', selectAll)
       if (selectAll.length == 0) {
-        selectAll.map(item => {
+        this.cartList.map(item => {
           item.checked = false
+          this.edit(item)
         })
       } else {
         selectAll.map(item => {
           item.checked = true
+          this.edit(item)
         })
       }
     },
-    increase(productId) {
-      console.log(productId)
-    },
-    reduce(productId) {
-      console.log(productId)
+    edit(row, flag) {
+      console.log('edit', row, flag)
+      if (flag == 'increase') {
+        row.productNum++
+        row.checked = true
+      } else if (flag == 'reduce') {
+        row.productNum--
+        row.checked = true
+      }
+      this.axios.post('/users/cartList/edit', {
+        productId: row.productId,
+        productNum: row.productNum,
+        checked: row.checked
+      }).then(response => {
+        let res = response.data
+        console.log(res)
+      })
     },
     deleteItem(row) {
       console.log(row)
@@ -124,7 +149,7 @@ export default {
       })
       this.cartList.map((item,index) => {
         if (item.checked === true) {
-          console.log('true')
+          console.log('item.checked:','true')
           this.$refs.tableRef.toggleRowSelection(this.cartList[index])
         }
       })

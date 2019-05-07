@@ -15,6 +15,11 @@ export default new Router({
       path: '/cartList',
       name: 'cartList',
       component: () => import('./views/CartList.vue')
+    },
+    {
+      path: '/address',
+      name: 'address',
+      component: () => import('./views/Address.vue')
     }
     // {
     //   path: '/about',

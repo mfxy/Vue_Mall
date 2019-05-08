@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'Address',
+  name: 'provCity',
   data() {
     return {
       // 所有数据
@@ -67,6 +67,33 @@ export default {
       optVal: [],
       // 选项
       options: [],
+      // 所以城市
+      citiesMap: new Map([
+        // [parentOfProvinceCode, childrenOfCity]
+        // 内蒙古自治区
+        ['150000000000', [
+          {value: '150100000000', label: '呼和浩特市'},
+          {value: '150200000000', label: '包头市'}
+        ]],
+        // 西藏自治区
+        ['540000000000', [
+          {value: '540100000000', label: '拉萨市'},
+          {value: '540200000000', label: '日喀则市'}
+        ]]
+      ]),
+      citiesObj: {
+        // [parentOfProvinceCode, childrenOfCity]
+        // 内蒙古自治区
+        '150000000000': [
+          {value: '150100000000', label: '呼和浩特市'},
+          {value: '150200000000', label: '包头市'}
+        ],
+        // 西藏自治区
+        '540000000000': [
+          {value: '540100000000', label: '拉萨市'},
+          {value: '540200000000', label: '日喀则市'}
+        ]
+      },
       // 所有街道
       streetsMap: new Map([
         // [parentOfDistrictCode, childrenOfStreet]
@@ -156,9 +183,10 @@ export default {
         })
       } else if (level == 2) {
         this.options.forEach(a => {
-          a.children.forEach(b => {
-            b.children = null
-          })
+          a.children = []
+          // a.children.forEach(b => {
+          //   b.children = null
+          // })
         })
       } else if (level == 4) {
         this.options.forEach(a => {
@@ -188,16 +216,14 @@ export default {
     // 点击后显示子级，[]时显示空白
     activeItemChange(arr) {
       console.log('activeItemChange', arr)
-      if (arr.length === 3) {
+      if (arr.length === 1) {
         let provinceIndex = arr[0].split(':')[0]
-        let cityIndex = arr[1].split(':')[0]
-        let districtIndex = arr[2].split(':')[0]
-        let districtVal = arr[2].split(':')[1]
-        console.log('district', provinceIndex, cityIndex, districtIndex, districtVal)
-        // console.log(this.streetsMap.get(districtVal))
-        console.log(this.streetsObj[districtVal])
-        if (!this.options[provinceIndex].children[cityIndex].children[districtIndex].children.length) {
-          this.$set(this.options[provinceIndex].children[cityIndex].children[districtIndex], 'children', this.streetsObj[districtVal])
+        let provinceVal = arr[0].split(':')[1]
+        console.log('province', provinceIndex, provinceVal)
+        console.log(this.citiesMap.get(provinceVal))
+        // console.log(this.citiesObj[provinceVal])
+        if (!this.options[provinceIndex].children.length) {
+          this.$set(this.options[provinceIndex], 'children', this.citiesMap.get(provinceVal))
         }
       }
     },
@@ -208,7 +234,7 @@ export default {
   },
   mounted() {
     // level = 1 or 2 or 3 or 4
-    let level = 4
+    let level = 2
     this.setOptionsByLevel(level)
     console.log('st', this.streets)
     console.log('level', level)

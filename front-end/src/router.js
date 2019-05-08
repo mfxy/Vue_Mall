@@ -20,6 +20,11 @@ export default new Router({
       path: '/address',
       name: 'address',
       component: () => import('./views/Address.vue')
+    },
+    {
+      path: '/provCity',
+      name: 'provCity',
+      component: () => import('./views/provCity.vue')
     }
     // {
     //   path: '/about',

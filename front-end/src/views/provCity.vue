@@ -13,6 +13,7 @@ export default {
   name: 'provCity',
   data() {
     return {
+      level: 2,
       // 所有数据
       opt: [{
         value: '150000000000',
@@ -67,7 +68,7 @@ export default {
       optVal: [],
       // 选项
       options: [],
-      // 所以城市
+      // 所有城市
       citiesMap: new Map([
         // [parentOfProvinceCode, childrenOfCity]
         // 内蒙古自治区
@@ -81,88 +82,30 @@ export default {
           {value: '540200000000', label: '日喀则市'}
         ]]
       ]),
-      citiesObj: {
-        // [parentOfProvinceCode, childrenOfCity]
-        // 内蒙古自治区
-        '150000000000': [
-          {value: '150100000000', label: '呼和浩特市'},
-          {value: '150200000000', label: '包头市'}
-        ],
-        // 西藏自治区
-        '540000000000': [
-          {value: '540100000000', label: '拉萨市'},
-          {value: '540200000000', label: '日喀则市'}
-        ]
-      },
-      // 所有街道
-      streetsMap: new Map([
-        // [parentOfDistrictCode, childrenOfStreet]
-        // 内蒙古自治区 > 呼和浩特市 > 市辖区
-        ['150101000000', null],
-        // 内蒙古自治区 > 呼和浩特市 > 新城区
-        ['150102000000', [
-          {value: '150102001000', label: '海拉尔东路街道办事处'},
-          {value: '150102002000', label: '锡林路街道办事处'}
+      // 所有区
+      districtsMap: new Map([
+        // [parentOfCityCode, childrenOfDistrict]
+        // 内蒙古自治区 > 呼和浩特市
+        ['150100000000', [
+          {value: '150101000000', label: '市辖区'},
+          {value: '150102000000', label: '新城区'}
         ]],
-        // 内蒙古自治区 > 包头市 > 市辖区
-        ['150201000000', null],
-        // 内蒙古自治区 > 包头市 > 东河区
-        ['150202000000', [
-          {value: '150202001000', label: '和平街道办事处'},
-          {value: '150202002000', label: '财神庙街道办事处'}
+        // 内蒙古自治区 > 包头市
+        ['150200000000', [
+          {value: '150201000000', label: '市辖区'},
+          {value: '150202000000', label: '东河区'}
         ]],
-        // 西藏自治区 > 拉萨市 > 市辖区
-        ['540101000000', null],
-        // 西藏自治区 > 拉萨市 > 城关区
-        ['540102000000', [
-          {value: '540102002000', label: '八廓街道办事处'},
-          {value: '540102003000', label: '吉日街道办事处'}
+        // 西藏自治区 > 拉萨市
+        ['540100000000', [
+          {value: '540101000000', label: '市辖区'},
+          {value: '540102000000', label: '城关区'}
         ]],
-        // 西藏自治区 > 日喀则市 > 桑珠孜区
-        ['540202000000', [
-          {value: '540202001000', label: '城南街道办事处'},
-          {value: '540202002000', label: '城北街道办事处'}
+        // 西藏自治区 > 日喀则市
+        ['540200000000', [
+          {value: '540202000000', label: '桑珠孜区'},
+          {value: '540221000000', label: '南木林县'}
         ]],
-        // 西藏自治区 > 日喀则市 > 南木林县
-        ['540221000000', [
-          {value: '540221100000', label: '南木林镇'},
-          {value: '540221200000', label: '达那乡'}
-        ]]
       ]),
-      streetsObj: {
-        // [parentOfDistrictCode, childrenOfStreet]
-        // 内蒙古自治区 > 呼和浩特市 > 市辖区
-        '150101000000': null,
-        // 内蒙古自治区 > 呼和浩特市 > 新城区
-        '150102000000': [
-          {value: '150102001000', label: '海拉尔东路街道办事处'},
-          {value: '150102002000', label: '锡林路街道办事处'}
-        ],
-        // 内蒙古自治区 > 包头市 > 市辖区
-        '150201000000': null,
-        // 内蒙古自治区 > 包头市 > 东河区
-        '150202000000': [
-          {value: '150202001000', label: '和平街道办事处'},
-          {value: '150202002000', label: '财神庙街道办事处'}
-        ],
-        // 西藏自治区 > 拉萨市 > 市辖区
-        '540101000000': null,
-        // 西藏自治区 > 拉萨市 > 城关区
-        '540102000000': [
-          {value: '540102002000', label: '八廓街道办事处'},
-          {value: '540102003000', label: '吉日街道办事处'}
-        ],
-        // 西藏自治区 > 日喀则市 > 桑珠孜区
-        '540202000000': [
-          {value: '540202001000', label: '城南街道办事处'},
-          {value: '540202002000', label: '城北街道办事处'}
-        ],
-        // 西藏自治区 > 日喀则市 > 南木林县
-        '540221000000': [
-          {value: '540221100000', label: '南木林镇'},
-          {value: '540221200000', label: '达那乡'}
-        ]
-      },
       // 配置
       props: {
         value: 'value',
@@ -178,24 +121,12 @@ export default {
       this.options = JSON.parse(JSON.stringify(this.optVal))
       console.log(this.options)
       if (level == 1) {
-        this.options.forEach(a => {
-          a.children = null
+        this.options.forEach(o => {
+          o.children = null
         })
-      } else if (level == 2) {
-        this.options.forEach(a => {
-          a.children = []
-          // a.children.forEach(b => {
-          //   b.children = null
-          // })
-        })
-      } else if (level == 4) {
-        this.options.forEach(a => {
-          a.children.forEach(b => {
-            b.children.forEach(c => {
-              console.log(c.children)
-              c.children = []
-            })
-          })
+      } else {
+        this.options.forEach(o => {
+          o.children = []
         })
       }
     },
@@ -221,9 +152,48 @@ export default {
         let provinceVal = arr[0].split(':')[1]
         console.log('province', provinceIndex, provinceVal)
         console.log(this.citiesMap.get(provinceVal))
-        // console.log(this.citiesObj[provinceVal])
+        let citiesData = this.citiesMap.get(provinceVal)
+        if (this.level === 2) {
+          console.log('level', this.level)
+          // 2级时，点击2级，value不包括index，没有children
+          citiesData = citiesData.map(c => {
+            return {
+              value: `${c.value}:${c.label}`,
+              label: c.label,
+            }
+          })
+        } else if (this.level === 3) {
+          console.log('level', this.level)
+          // 3级时，点击2级，value包括index，children为[]
+          citiesData = citiesData.map((c,i) => {
+            return {
+              value: `${i}:${c.value}:${c.label}`,
+              label: c.label,
+              children: []
+            }
+          })
+        }
         if (!this.options[provinceIndex].children.length) {
-          this.$set(this.options[provinceIndex], 'children', this.citiesMap.get(provinceVal))
+          console.log('citiesData', citiesData)
+          this.$set(this.options[provinceIndex], 'children', citiesData)
+        }
+      } else if (arr.length === 2) {
+        // 只有3级时执行
+        let provinceIndex = arr[0].split(':')[0]
+        let cityIndex = arr[1].split(':')[0]
+        let cityVal = arr[1].split(':')[1]
+        console.log('city', cityIndex, cityVal)
+        console.log(this.districtsMap.get(cityVal))
+        let districtsData = this.districtsMap.get(cityVal)
+        districtsData = districtsData.map(d => {
+          return {
+            value: `${d.value}:${d.label}`,
+            label: d.label
+          }
+        })
+        if (!this.options[provinceIndex].children[cityIndex].children.length) {
+          console.log('districtsData', districtsData)
+          this.$set(this.options[provinceIndex].children[cityIndex], 'children', districtsData)
         }
       }
     },
@@ -234,10 +204,9 @@ export default {
   },
   mounted() {
     // level = 1 or 2 or 3 or 4
-    let level = 2
-    this.setOptionsByLevel(level)
-    console.log('st', this.streets)
-    console.log('level', level)
+    this.level = 3
+    this.setOptionsByLevel(this.level)
+    console.log('level', this.level)
   }
 }
 </script>

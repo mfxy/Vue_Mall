@@ -196,8 +196,9 @@ export default {
         console.log('district', provinceIndex, cityIndex, districtIndex, districtVal)
         // console.log(this.streetsMap.get(districtVal))
         console.log(this.streetsObj[districtVal])
+        let streetsData = this.streetsObj[districtVal]
         if (!this.options[provinceIndex].children[cityIndex].children[districtIndex].children.length) {
-          this.$set(this.options[provinceIndex].children[cityIndex].children[districtIndex], 'children', this.streetsObj[districtVal])
+          this.$set(this.options[provinceIndex].children[cityIndex].children[districtIndex], 'children', streetsData)
         }
       }
     },
